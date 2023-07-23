@@ -1,4 +1,4 @@
-package Utilities;
+package utilities;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -14,16 +14,19 @@ public class WebDriverFactory {
 
         switch (browserType) {
             case CHROME:
-                setProperty("webdriver.chrome.driver", webDriverPath + "/chromedriver");
+                setProperty("webdriver.chrome.driver", webDriverPath + "/chromedriver.exe");
                 driver = new ChromeDriver();
                 break;
             case FIREFOX:
-                setProperty("webdriver.gecko.driver", webDriverPath + "/geckodriver");
+                setProperty("webdriver.gecko.driver", webDriverPath + "/geckodriver.exe");
                 driver = new FirefoxDriver();
                 break;
             default:
                 throw new IllegalArgumentException("Invalid browser type: " + browserType);
         }
+
+        driver.manage().window().maximize();
+        driver.manage().deleteAllCookies();
 
         return driver;
     }
