@@ -7,7 +7,9 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import static java.lang.System.*;
 
 public class WebDriverFactory {
+
     public static WebDriver createWebDriver(BrowserType browserType) {
+
         WebDriver driver;
 
         String webDriverPath = getenv("WEBDRIVER_PATH");

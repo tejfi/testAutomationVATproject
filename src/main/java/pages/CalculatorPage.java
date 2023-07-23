@@ -1,5 +1,7 @@
 package pages;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.WebDriver;
@@ -7,6 +9,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.text.MessageFormat;
 import java.time.Duration;
 
 public class CalculatorPage {
@@ -21,9 +24,12 @@ public class CalculatorPage {
     private By priceWithTaxRadioButton;
     private By pageTitle;
 
+    Logger logger = LoggerFactory.getLogger(CalculatorPage.class);
+    private Long WAIT_DURATION_IN_MS = 200000L;
 
     public CalculatorPage(WebDriver driver) {
         this.driver = driver;
+        logger.info(MessageFormat.format("Current  URL of page: {0}", driver.getCurrentUrl()));
         initializeElements();
     }
 
@@ -68,9 +74,9 @@ public class CalculatorPage {
     }
 
     private WebElement getVatInputElem() {
-        waitForElement(valueAddedTaxRadioButton);
+        waitForElement(valueAddedTaxRadioButton, WAIT_DURATION_IN_MS);
         driver.findElement(valueAddedTaxRadioButton).click();
-        waitForElement(vatSum);
+        waitForElement(vatSum, WAIT_DURATION_IN_MS);
         return driver.findElement(vatSum);
     }
 
@@ -83,7 +89,7 @@ public class CalculatorPage {
     }
 
     private WebElement getGrossAmountInputElem() {
-        waitForElement(grossPrice);
+        waitForElement(grossPrice, WAIT_DURATION_IN_MS);
         return driver.findElement(grossPrice);
     }
 
@@ -108,21 +114,23 @@ public class CalculatorPage {
 
     public String getNetAmount() {
         getPriceWithOutTaxRadioButton().click();
-        waitForElement(netPrice);
+        waitForElement(netPrice, WAIT_DURATION_IN_MS);
         return driver
                 .findElement(netPrice).getAttribute("value");
     }
 
 
-    public String getVatTax() throws InterruptedException {
+    public String getVatTax() {
         clickVatTaxRadioButton();
-        waitForElement(vatSum);
+        waitForElement(vatSum, WAIT_DURATION_IN_MS);
         return driver
                 .findElement(vatSum).getAttribute("value");
     }
 
-    private void waitForElement(By locator) {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofMillis(200000));
+    private void waitForElement(By locator, Long durationInMillis) {
+        logger.info(MessageFormat
+                .format("Waiting {0} ms for elem to be visible: {1}", durationInMillis, locator));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofMillis(durationInMillis));
         wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
@@ -130,24 +138,37 @@ public class CalculatorPage {
         WebElement elem = getPriceWithTaxRadioButton();
 
         try {
+            logger.info("Click on PriceWithTaxRadioButton");
             elem.click();
         } catch (ElementClickInterceptedException e) {
+            logger.info(MessageFormat
+                    .format("ElementClickInterceptedException happened: {0}", e));
+            logger.info("Page refresh");
             driver.navigate().refresh();
+            logger.info("Click on PriceWithTaxRadioButton");
             elem.click();
         }
     }
+
     private void clickVatTaxRadioButton() {
         WebElement elem = getVatTaxRadioButton();
 
         try {
+            logger.info("Click on VatTaxRadioButton");
             elem.click();
         } catch (ElementClickInterceptedException e) {
+            logger.info(MessageFormat
+                    .format("ElementClickInterceptedException happened: {0}", e));
+            logger.info("Page refresh");
             driver.navigate().refresh();
+            logger.info("Click on VatTaxRadioButton");
             elem.click();
         }
     }
 
     private void waitForRadioButtonElement(By locator) {
+        logger.info(MessageFormat
+                .format("Waiting for elem: {0}", locator));
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofMillis(200000));
         wait.until(ExpectedConditions.elementToBeClickable(locator));
     }
@@ -163,7 +184,7 @@ public class CalculatorPage {
     }
 
     private WebElement getPriceWithOutTaxRadioButton() {
-        waitForElement(priceWithOutVatRadioButton);
+        waitForElement(priceWithOutVatRadioButton, WAIT_DURATION_IN_MS);
         return driver.findElement(priceWithOutVatRadioButton);
     }
 
@@ -174,8 +195,8 @@ public class CalculatorPage {
 
 
     public String getGrossAmount() {
-            clickPriceWithTaxRadioButton();
-            waitForElement(grossPrice);
-            return driver.findElement(grossPrice).getAttribute("value");
-        }
+        clickPriceWithTaxRadioButton();
+        waitForElement(grossPrice, WAIT_DURATION_IN_MS);
+        return driver.findElement(grossPrice).getAttribute("value");
+    }
 }
