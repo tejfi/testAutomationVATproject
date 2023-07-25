@@ -28,7 +28,7 @@ public class CalculatorPage {
 
     public CalculatorPage(WebDriver driver) {
         this.driver = driver;
-        logger.info(MessageFormat.format("Current  URL of page: {0}", driver.getCurrentUrl()));
+        logger.info("Current  URL of page: {}", driver.getCurrentUrl());
         initializeElements();
     }
 
@@ -127,8 +127,7 @@ public class CalculatorPage {
     }
 
     private void waitForElement(By locator, Long durationInMillis) {
-        logger.info(MessageFormat
-                .format("Waiting {0} ms for elem to be visible: {1}", durationInMillis, locator));
+        logger.info("Waiting {} ms for elem to be visible: {}", durationInMillis, locator);
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofMillis(durationInMillis));
         wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
@@ -143,6 +142,7 @@ public class CalculatorPage {
             logger.info(MessageFormat
                     .format("ElementClickInterceptedException happened: {0}", e));
             logger.info("Page refresh");
+
             driver.navigate().refresh();
             logger.info("Click on PriceWithTaxRadioButton");
             elem.click();
@@ -166,8 +166,7 @@ public class CalculatorPage {
     }
 
     private void waitForRadioButtonElement(By locator) {
-        logger.info(MessageFormat
-                .format("Waiting for elem: {0}", locator));
+        logger.info("Waiting for elem: {}", locator);
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofMillis(200000));
         wait.until(ExpectedConditions.elementToBeClickable(locator));
     }
