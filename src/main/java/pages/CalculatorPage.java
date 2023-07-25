@@ -13,9 +13,11 @@ import java.text.MessageFormat;
 import java.time.Duration;
 
 public class CalculatorPage {
-    private final WebDriver driver;
     private static final String PAGE_TITLE_TEXT = "Value-Added Tax (VAT) Calculator";
-    By netPrice = By.id("NetPrice");
+    private final WebDriver driver;
+    private final By netPrice = By.id("NetPrice");
+    private final Long WAIT_DURATION_IN_MS = 200000L;
+    Logger logger = LoggerFactory.getLogger(CalculatorPage.class);
     private By vatSum;
     private By grossPrice;
     private By countrySelect;
@@ -23,9 +25,6 @@ public class CalculatorPage {
     private By valueAddedTaxRadioButton;
     private By priceWithTaxRadioButton;
     private By pageTitle;
-
-    Logger logger = LoggerFactory.getLogger(CalculatorPage.class);
-    private Long WAIT_DURATION_IN_MS = 200000L;
 
     public CalculatorPage(WebDriver driver) {
         this.driver = driver;
